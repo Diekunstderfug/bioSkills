@@ -44,7 +44,8 @@ sudo apt install samtools bcftools ncbi-blast+ minimap2 bedtools
 # conda
 conda install -c bioconda samtools bcftools blast minimap2 bedtools \
     fastp kraken2 metaphlan sra-tools bwa-mem2 bowtie2 star hisat2 \
-    manta delly cnvkit macs3 tobias
+    manta delly cnvkit macs3 macs2 genrich tobias rgt-hint idr picard \
+    preseq deeptools chromap subread fithichip gatk4
 ```
 
 ## Installation
@@ -133,12 +134,12 @@ All installers support `--categories` for selective installation and `--dry-run`
 | **expression-matrix** | 5 | pandas, anndata, DESeq2, edgeR, biomaRt | Count matrix handling, normalization, gene ID mapping |
 | **copy-number** | 4 | CNVkit, GATK | CNV detection, visualization, annotation |
 | **phasing-imputation** | 4 | Beagle, SHAPEIT5, bcftools | Haplotype phasing, genotype imputation |
-| **atac-seq** | 6 | MACS3, DiffBind, chromVAR, TOBIAS | ATAC-seq peaks, differential accessibility, footprinting, TF motif deviation |
+| **atac-seq** | 12 | MACS3, DiffBind, csaw, chromVAR, TOBIAS, scprinter, ArchR, Signac, SnapATAC2, Cicero, ABC, chromBPNet, BPNet, scBasset, EnFormer, WASP, GATK ASEReadCounter, RASQUAL | Peak calling (MACS/Genrich/HMMRATAC), ENCODE 4 QC with spike-in / sex-chr, fixed-width consensus peaksets, differential accessibility with permutation/spike-in/Hi-C-anchored, TF footprinting (bias correction including chromBPNet), motif variability (chromVAR/scBasset), nucleosome positioning (NucleoATAC/V-plots/H2A.Z), single-cell ATAC (Signac/ArchR/SnapATAC2/scArches), cis-regulatory co-accessibility (Cicero/SCENIC+), deep learning (chromBPNet/BPNet/scBasset/EnFormer; in silico variant effect; TF-MoDISco motif discovery), enhancer-gene linking (ABC, ENCODE-rE2G, HiChIP, CRISPRi-FlowFISH validation), allele-specific accessibility (WASP, GATK, RASQUAL caQTL) |
 | **genome-assembly** | 8 | SPAdes, Flye, hifiasm, QUAST, BUSCO | Assembly, polishing, scaffolding, quality assessment |
 | **primer-design** | 3 | primer3-py | PCR primer design, qPCR probes, validation |
 | **spatial-transcriptomics** | 11 | Squidpy, SpatialData, Scanpy, scimap | Visium, Xenium, Slide-seq, spatial stats, domain detection, deconvolution, spatial proteomics |
 | **hi-c-analysis** | 8 | cooler, cooltools, pairtools, HiCExplorer | Contact matrices, compartments, TADs, loops, differential |
-| **alternative-splicing** | 6 | rMATS-turbo, SUPPA2, IsoformSwitchAnalyzeR | Splicing quantification, differential splicing, isoform switching, sashimi visualization |
+| **alternative-splicing** | 9 | rMATS-turbo, leafcutter, MAJIQ, SpliceAI, FRASER 2.0, FLAIR, IsoformSwitchAnalyzeR | Quantification, differential splicing, isoform switching/DTU, sashimi viz, splicing QC, single-cell splicing, splice variant prediction (SpliceAI), outlier detection (FRASER2/DROP), long-read splicing |
 | **chemoinformatics** | 7 | RDKit, DeepChem, AutoDock Vina | Molecular I/O, descriptors, similarity, ADMET, virtual screening, reaction enumeration |
 | **liquid-biopsy** | 6 | ichorCNA, fgbio, VarDict, FinaleToolkit | cfDNA preprocessing, fragmentomics, tumor fraction, ctDNA mutations, longitudinal monitoring |
 | **workflows** | 41 | Various (workflow-specific) | End-to-end pipelines: RNA-seq, variants, ChIP-seq, scRNA-seq, spatial, Hi-C, proteomics, microbiome, CRISPR, metabolomics, multi-omics, immunotherapy, outbreak, metabolic modeling, splicing, liquid biopsy, genome annotation, GRN, causal genomics, time-course, eDNA, clinical trials |
@@ -173,11 +174,11 @@ All installers support `--categories` for selective installation and `--dry-run`
 | **machine-learning** | 6 | sklearn, shap, lifelines, scvi-tools | Biomarker discovery, model interpretation, survival analysis, atlas mapping |
 | **clinical-biostatistics** | 6 | statsmodels, scipy, tableone, pyreadstat | CDISC data handling, logistic regression, categorical tests, effect measures, subgroup analysis, trial reporting |
 
-**Total: 441 skills across 63 categories**
+**Total: 450 skills across 63 categories**
 
 ## Example Usage
 
-Once skills are deployed, ask your agent naturally. Here are examples across common workflows -- the full collection covers 441 skills across 63 categories:
+Once skills are deployed, ask your agent naturally. Here are examples across common workflows -- the full collection covers 450 skills across 63 categories:
 
 ```
 # RNA-seq & Differential Expression
@@ -203,10 +204,18 @@ Once skills are deployed, ask your agent naturally. Here are examples across com
 "Annotate my VCF with gene names, functional effects, and clinical databases"
 "Find structural variants like deletions and duplications in my WGS data"
 "My patient has CYP2D6 variants - what's their metabolizer phenotype?"
+"Predict if this deep-intronic variant creates a pseudoexon using SpliceAI extended-window scoring"
+"Apply ClinGen SVI 2023 splicing thresholds to classify variants as PP3 supporting/moderate/strong"
 
 # Epigenomics & Chromatin
 "Call peaks from my ChIP-seq data for this transcription factor"
-"Identify open chromatin regions from my ATAC-seq samples"
+"Run the ENCODE 4 ATAC-seq pipeline with IDR across replicates and pseudoreplicate self-consistency"
+"Build a Corces 2018 fixed-width consensus peakset (501 bp) before differential accessibility testing"
+"Run TOBIAS three-step footprinting and verify CTCF aggregate shows a clean V-shape"
+"Score 100 GWAS SNPs for chromatin effects with chromBPNet pre-trained on the matched cell type"
+"Predict enhancer-gene regulatory connections with the ABC model using ATAC + H3K27ac + Hi-C"
+"Run WASP-corrected allele-specific accessibility analysis to map chromatin QTLs"
+"Process 10X scATAC with Signac (TF-IDF + LSI dims=2:30 to skip depth) and call peaks per cluster"
 "Find differentially methylated regions between tumor and normal"
 "Identify TADs and chromatin loops from my Hi-C contact matrix"
 
@@ -242,9 +251,12 @@ Once skills are deployed, ask your agent naturally. Here are examples across com
 # Long-Read Sequencing
 "Basecall my Oxford Nanopore fast5 files with high accuracy"
 "Assess if my genome assembly is complete and high quality"
+"Discover full-length isoforms from my PacBio HiFi or ONT R10.4.1 data with IsoQuant or Bambu"
 
 # Specialized Analysis
 "Analyze differential exon usage to detect alternative splicing changes"
+"Detect aberrant splicing in my rare-disease patient vs control panel using FRASER 2.0"
+"Find isoform switches with NMD or domain consequences between my conditions"
 "Extract and analyze TCR sequences from my T cell RNA-seq"
 "Build a survival model to find genes associated with patient outcomes"
 "Use machine learning to discover biomarkers that predict treatment response"
