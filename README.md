@@ -188,11 +188,11 @@ All installers support `--categories` for selective installation and `--dry-run`
 | **machine-learning** | 6 | sklearn, shap, lifelines, scvi-tools | Biomarker discovery, model interpretation, survival analysis, atlas mapping |
 | **clinical-biostatistics** | 6 | statsmodels, scipy, tableone, pyreadstat | CDISC data handling, logistic regression, categorical tests, effect measures, subgroup analysis, trial reporting |
 
-**Total: 469 skills across 63 categories**
+**Total: 474 skills across 63 categories**
 
 ## Example Usage
 
-Once skills are deployed, ask your agent naturally. Here are examples across common workflows -- the full collection covers 469 skills across 63 categories:
+Once skills are deployed, ask your agent naturally. Here are examples across common workflows -- the full collection covers 474 skills across 63 categories:
 
 ```
 # RNA-seq & Differential Expression
